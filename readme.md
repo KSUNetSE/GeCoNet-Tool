@@ -10,6 +10,7 @@ select the comma delimited gene co-expression dataset, where the first row is th
 |---------|--------|------|-----|
 |gene_1 | value | value|value|
 |gene_2 | value|value|value|
+
 default: anopheles.csv
 
 `Remove zeros:`
@@ -69,6 +70,7 @@ select a comma delimited edge list in the following format:
 | source | target | weight|
 |---------|--------|------|
 |node_1 | node_2 | edge_weight|
+
 The third column can be neglected if the network is unweighted.
 default: anopheles.csv
 
