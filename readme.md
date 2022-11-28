@@ -1,6 +1,6 @@
 ﻿# Gene Co-expression Network Construction and Analysis
 
-This is a Python package for the generation and analysis of Gene Co-expression Networks.
+This is a Python package for the generation and analysis of Gene Co-expression Networks. The source code is in the src folder and the executable file is: https://github.com/KSUNetSE/GeCoNet_Tool/releases or click the release on the right side.
 
 ## Network construction
 
