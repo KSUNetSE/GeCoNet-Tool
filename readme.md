@@ -2,7 +2,6 @@
 
 This is a Python package for the generation and analysis of Gene Co-expression Networks.
 
-
 ## Network construction
 
 `Input data (.csv):`
