@@ -49,6 +49,7 @@ The initial parameters used to opimize the sliding  threshold curve.
 default: 10, for example:
 |4, 5, ... , 10| 11, 12, ... , 20 | 21, 22, ... , 30 | 
 |----------------|-------------------------------|-----------------------------|
+
 In this case, the node pairs with 4, 5, ..., 10 paired elements will be categorized into the same class.
 
 `Cutoff`
