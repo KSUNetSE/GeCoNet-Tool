@@ -136,13 +136,15 @@ class GeneCoExp():
         
         print('determining the threshold of each interval...')
         bin2pair = defaultdict() # {4:7, 5:7,...,101:105, 102:105}
+        # for p in pairs:
+        #     bin2pair[p] = ((p-1)//bin_size)*bin_size + (bin_size+1)/2.
+        #     if p <=10:
+        #         bin2pair[p] = (min(pairs)+10)/2                         
+        #     if max(pairs)//bin_size==((p-1)//bin_size):
+        #         bin2pair[p] = (((p-1)//bin_size)*bin_size + max(pairs)+1)/2.
         for p in pairs:
-            bin2pair[p] = ((p-1)//bin_size)*bin_size + (bin_size+1)/2.
-            if p <=10:
-                bin2pair[p] = (min(pairs)+10)/2                         
-            if max(pairs)//bin_size==((p-1)//bin_size):
-                bin2pair[p] = (((p-1)//bin_size)*bin_size + max(pairs)+1)/2.
-        
+            bin2pair[p] = ((p - self.min_periods)//bin_size)*bin_size + self.min_periods + (bin_size -1)/2.
+            
         bin2pcc = defaultdict(list) # {7:[pcc], 15:[pcc], 25:[pcc]}
         for key in pairs:
             if len(pair2pcc[key])>0:
@@ -193,11 +195,11 @@ class GeneCoExp():
                 plt.figure(1)
                 plt.scatter(xdata, ydata, color ='red', label = 'raw data')
                 plt.plot(xdata, func(xdata, *self.popt), color='blue', label ='fitted curve')
-                plt.xlabel('# of paired elements', fontsize =10)
-                plt.ylabel('threshold', fontsize =10)
-                plt.xticks(fontsize=8)
-                plt.yticks(fontsize=8)
-                plt.legend(fontsize = 10)
+                plt.xlabel('# of paired elements', fontsize =15)
+                plt.ylabel('threshold', fontsize =15)
+                plt.xticks(fontsize=15)
+                plt.yticks(fontsize=15)
+                plt.legend(fontsize = 15)
                 plt.tight_layout()
                 plt.savefig('threshold_curve.png', dpi=300)
                 plt.savefig(self.savepath + ' threshold_curve.png', dpi=300)

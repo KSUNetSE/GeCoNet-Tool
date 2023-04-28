@@ -3,9 +3,10 @@ import pandas as pd
 import community
 import matplotlib.pyplot as plt
 from collections import Counter
+from cdlib import algorithms
 
 colormap =['black', 'darkgreen', 'royalblue', 'darkorange', 'lime', 'slategrey', 'navy', 'red','blue', 'darkred','teal','saddlebrown',
-           'olive','gold','cyan','magenda','darkorchid','pink']
+           'olive','gold','cyan','magenta','darkorchid','pink']
 def rn(G,thres):
     for ele in list(G.nodes()):
         if G.degree(ele,weight='weight') <= thres:
@@ -93,7 +94,7 @@ class networkanalysis:
             
         return thr, coreNet
     
-    def find_pos(self, lcc=True, core=True, louvain_community=True):
+    def find_pos(self, lcc=True, core=True, louvain_community=True, leiden =True):
         
         if lcc:
             print('Saving the largest connected component...')
@@ -116,26 +117,38 @@ class networkanalysis:
         self.master=[self.nodelist]  
        
         
-        if core or louvain_community:
+        if core or louvain_community or leiden:
             self.pos= nx.fruchterman_reingold_layout(self.H)
             
         
             
-    def netcommu(self,louvain_community = True):
-        if louvain_community:
+    def netcommu(self,louvain_community = True, leiden=True, resolution=1.0):
+        if louvain_community or leiden:
             print('determining communities...')
-            comm = community.best_partition(self.G)
-            commus = [comm[nd] for nd in self.nodelist]
+            if louvain_community:
+                #edit the resolution to set the parameter of communities
+                comm = algorithms.louvain(self.G, resolution = resolution)
+                print('louvain-community')
+            if leiden:
+                print('leiden-community')
+                comm = algorithms.leiden(self.G)
+            #comm = la.find_partition(iG, la.ModularityVertexPartition, max_comm_size =18)
+            # comment the above syntax and uncomment the follwoing the 
+            #comm = la.find_partition(iG, la.ModularityVertexPartition, max_comm_size =18, resolution_parameter = 0.05)
+            comms = {e:idx for idx,l in enumerate(comm.communities) for e in l}
+            #comm = community.best_partition(self.G)
+            commus = [comms[nd] for nd in self.nodelist]
             self.attr.append('community')
             self.master.append(commus)
             
-            Hcommus = [comm[nd] for nd in self.H.nodes()]
+            Hcommus = [comms[nd] for nd in self.H.nodes()]
             c_cnt = Counter(Hcommus) #{0:1309, 1:1008, 2:12, ..., 20:10, 23: 20}
             commu2cnt = {k: v for k, v in sorted(c_cnt.items(), key=lambda item: item[1], reverse = True)} #{0:1309, 1:1008, 23: 20, 2:12, 20:10, ...}
             print('the sizes of the LCC communities:', commu2cnt)
             
             comm_remap = {c:idx for idx,c in enumerate(commu2cnt.keys())}#{0:0, 1:1, 2:2, 23:3, 2:4, 20:5 ...}
             Hcommus = [comm_remap[e] for e in Hcommus]
+			
             commu2color = []
             # if len(commu2cnt)<=len(colormap):             
             #     commu2color = [colormap[idx] for idx in Hcommus]
@@ -194,10 +207,10 @@ class networkanalysis:
             
             plt.figure(4, dpi=300)
             plt.hist(deg, bins=100,  edgecolor='black', color= 'blue')
-            plt.xlabel(self.attr[-1], fontsize=10)
-            plt.ylabel('# of nodes', fontsize=10)
-            plt.xticks(fontsize=8)
-            plt.yticks(fontsize=8)
+            plt.xlabel(self.attr[-1], fontsize=15)
+            plt.ylabel('# of nodes', fontsize=15)
+            plt.xticks(fontsize=15)
+            plt.yticks(fontsize=15)
             plt.xscale('log')
             plt.yscale('log')
             plt.tight_layout()

@@ -166,11 +166,15 @@ class App(tk.Frame):
         self.weighted = tk.BooleanVar()
         tk.Checkbutton(self.set_bar, text="weighted (slow mode)", variable=self.weighted, onvalue=True, offvalue=False, height=1, width=15).pack(padx=5,pady=0, fill=tk.X)
         
+        self.louvain_community = tk.BooleanVar(value=True)
+        tk.Checkbutton(self.set_bar, text="Louvain community", variable=self.louvain_community, onvalue=True, offvalue=False, height=1, width=15).pack(padx=5,pady=0, fill=tk.X)
+        self.leiden_community = tk.BooleanVar(value=False)
+        tk.Checkbutton(self.set_bar, text="Leiden community", variable=self.leiden_community, onvalue=True, offvalue=False, height=1, width=15).pack(padx=5,pady=0, fill=tk.X)
+        
         self.pro_bar  =  tk.Frame(self.filter_bar,  width=15,  height=1)
         self.pro_bar.pack(side='top',  fill=tk.X,  padx=5,  pady=10,  expand= False)
         
-        self.community = tk.BooleanVar(value=True)
-        tk.Checkbutton(self.pro_bar, text="community", variable=self.community, onvalue=True, offvalue=False, height=1, width=15).pack(padx=5,pady=0, fill=tk.X)
+
         self.core = tk.BooleanVar(value=True)
         tk.Checkbutton(self.pro_bar, text="core", variable=self.core, onvalue=True, offvalue=False, height=1, width=15).pack(padx=5,pady=0, fill=tk.X)
         self.degree = tk.BooleanVar(value=True)
@@ -392,7 +396,7 @@ class App(tk.Frame):
         netw = na.networkanalysis(self.readedge.get(), weighted = self.weighted.get())
         
         self.mylist.insert(tk.END, '--Pre-processing the network...')
-        netw.find_pos(lcc= self.lcc.get(), core = self.core.get(), louvain_community = self.community.get())   
+        netw.find_pos(lcc= self.lcc.get(), core = self.core.get(), louvain_community = self.louvain_community.get(), leiden = self.leiden_community.get())   
         if self.lcc.get():
             self.mylist.insert(tk.END, '--The largest connected component is saved as:')
             self.mylist.insert(tk.END, '    ' + netw.savepath + ' (LCC).csv')
@@ -404,9 +408,9 @@ class App(tk.Frame):
             self.stopset()
             return   
         
-        if self.community.get():
+        if self.louvain_community.get() or self.leiden_community.get():
             self.mylist.insert(tk.END, '--Detecting communities...')
-            netw.netcommu()
+            netw.netcommu(louvain_community = self.louvain_community.get(), leiden=self.leiden_community.get())
             if self.stopflag:
                 self.stopset()
                 return
@@ -440,7 +444,7 @@ class App(tk.Frame):
                 self.stopset()
                 return 
             
-        if self.community.get() or self.degree.get() or self.core.get() or self.eigenvector.get() or self.betweenness.get() or self.closeness.get():
+        if self.louvain_community.get() or self.leiden_community.get() or self.degree.get() or self.core.get() or self.eigenvector.get() or self.betweenness.get() or self.closeness.get():
             netw.saveattr()
             self.mylist.insert(tk.END, '--Property Table is saved as:')
             self.mylist.insert(tk.END, netw.savepath+ ' property list.csv')
