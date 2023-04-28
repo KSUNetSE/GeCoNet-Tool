@@ -82,9 +82,13 @@ The program will save and analyze the largest connected component. The largest c
 `weighted:`
 Use weighted edges to produce network properties.
 
-`community:`
+` Louvain community:`
 Use the louvain algorithm to detect the communities of the network. 
 
+` Louvain community:`
+Use the Leiden algorithm to detect the communities of the network. 
+ Interested Users are recommended to edit the raw code to customize the settings for communities detection.
+ 
 `core:`
 Detect the core of the network. 
 The program will visualize the network with the Fruchterman Reingold algorihtm if `community` or (and) `core` is selected.
