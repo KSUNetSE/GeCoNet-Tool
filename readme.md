@@ -87,7 +87,7 @@ Use the louvain algorithm to detect the communities of the network.
 
 ` Louvain community:`
 Use the Leiden algorithm to detect the communities of the network. 
- Interested Users are recommended to edit the raw code to customize the settings for communities detection.
+Interested Users are recommended to edit the function netcommu (in the file: network_analysis.py) to customize the settings for communities detection.
  
 `core:`
 Detect the core of the network. 
